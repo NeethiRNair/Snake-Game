@@ -6,12 +6,12 @@ const columns = cvs.width/scale;
 
 var dir, playerName, playerScore, newGame;
 
-
 function resetfn(){
     localStorage.setItem("HighestScore",0);
     snake.highest = 0;
     document.getElementById("highestScore").innerText="Highest Score: " + localStorage.getItem("HighestScore");
 }
+
 //START GAME
 function game(){ 
     setUp();
