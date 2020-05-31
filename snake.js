@@ -4,11 +4,14 @@ var scale =20;
 const rows = cvs.height/scale;
 const columns = cvs.width/scale;
 
-var dir, playerName, playerScore, newGame;
+var dir, playerName, playerScore, newGame, level, speed =250;
+var speedChangeScore = 5;
 
 function resetfn(){
     localStorage.setItem("HighestScore",0);
     snake.highest = 0;
+    
+    /* document.getElementById("level").innerText="Level: " + snake.level; */
     document.getElementById("highestScore").innerText="Highest Score: " + localStorage.getItem("HighestScore");
 }
 
@@ -20,12 +23,13 @@ function game(){
         snake = new Snake();
         food =new Food();
         food.location();
-        newGame = setInterval(playGame,150);
+        newGame = setInterval(playGame,speed);
     }
     
     function playGame(){
         
         document.getElementById("score").innerText="Score: " + snake.total;
+        document.getElementById("level").innerText="Level: " + snake.level;
         document.getElementById("highestScore").innerText="Highest Score: " + snake.highest;
         snake.clear();
         food.draw();
@@ -111,6 +115,7 @@ function Snake(){
     this.y = 10*scale;
     this.total = 0;
     this.tail = [];
+    this.level = 1;
     this.highest = (localStorage.getItem("HighestScore")) ? localStorage.getItem("HighestScore") : 0; 
     
     //DRAW
@@ -134,7 +139,7 @@ function Snake(){
     this.update = function(){
         
         //Wrapping of snake
-     /*    
+        /*    
         if(this.x > cvs.width)
         {this.x = 0;}
         if(this.x < 0)
@@ -142,8 +147,8 @@ function Snake(){
         if(this.y > cvs.height)
         {this.y= 0; }
         if(this.y < 0)
-        {this.y = cvs.height;}
- */
+        {this.y = cvs.height;} */
+ 
         //If food eaten update the snake length
         for(var i=0; i<this.tail.length - 1; i++){
             this.tail[i] = this.tail[i+1];
@@ -155,6 +160,24 @@ function Snake(){
             food.location();
             food.draw();
             this.total++;
+            
+            if(this.total === speedChangeScore){
+                clearInterval(newGame);
+                speedChangeScore +=5;
+                if(speed<=100)
+                {
+                    this.level+=1;
+                    document.getElementById("level").innerText="Level: " + this.level;
+                    speed -= 20;
+                }
+                else{
+                    this.level+=1;
+                    document.getElementById("level").innerText="Level: " + this.level;
+                    speed -= 50;
+                }
+                newGame = setInterval(playGame,speed);
+                console.log(speed, speedChangeScore)
+            }
             if(this.total > this.highest){
 
                 this.highest = this.total;          
