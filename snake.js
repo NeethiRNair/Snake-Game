@@ -4,14 +4,12 @@ var scale =20;
 const rows = cvs.height/scale;
 const columns = cvs.width/scale;
 
-var dir, playerName, playerScore, newGame, level, speed =250;
+var dir, playerName, playerScore, newGame, level;
 var speedChangeScore = 5;
 
 function resetfn(){
     localStorage.setItem("HighestScore",0);
     snake.highest = 0;
-    
-    /* document.getElementById("level").innerText="Level: " + snake.level; */
     document.getElementById("highestScore").innerText="Highest Score: " + localStorage.getItem("HighestScore");
 }
 
@@ -23,7 +21,7 @@ function game(){
         snake = new Snake();
         food =new Food();
         food.location();
-        newGame = setInterval(playGame,speed);
+        newGame = setInterval(playGame,snake.speed);
     }
     
     function playGame(){
@@ -65,15 +63,15 @@ function gameOver(){
  
 
 //Set Player Name
-function setPlayerName(){
+/* function setPlayerName(){
     playerName = prompt("Enter the Player Name (If not entered will be set as 'Anonymous'): ");
     if(playerName != "" && playerName != null){
         document.querySelector("#playerName").textContent = "Player Name: " + playerName;
     }else{
         document.querySelector("#playerName").textContent  = "Player Name: Anonymous";
     }
+} */
 
-}
 //CHANGE THE DIRECTION OF THE SNAKE
 function changeDirection(){
     if (dir == "LEFT") {snake.x -= scale }
@@ -111,11 +109,12 @@ function Food () {
 
 //SNAKE
 function Snake(){
-    this.x = 9*scale;
-    this.y = 10*scale;
+    this.x = 17*scale;
+    this.y = 17*scale;
     this.total = 0;
     this.tail = [];
     this.level = 1;
+    this.speed =250;
     this.highest = (localStorage.getItem("HighestScore")) ? localStorage.getItem("HighestScore") : 0; 
     
     //DRAW
@@ -164,19 +163,18 @@ function Snake(){
             if(this.total === speedChangeScore){
                 clearInterval(newGame);
                 speedChangeScore +=5;
-                if(speed<=100)
+                if(this.speed<=100)
                 {
                     this.level+=1;
                     document.getElementById("level").innerText="Level: " + this.level;
-                    speed -= 20;
+                    this.speed -= 20;
                 }
                 else{
                     this.level+=1;
                     document.getElementById("level").innerText="Level: " + this.level;
-                    speed -= 50;
+                    this.speed -= 50;
                 }
-                newGame = setInterval(playGame,speed);
-                console.log(speed, speedChangeScore)
+                newGame = setInterval(playGame,this.speed);
             }
             if(this.total > this.highest){
 
